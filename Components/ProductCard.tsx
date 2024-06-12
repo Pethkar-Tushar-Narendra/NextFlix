@@ -15,8 +15,6 @@ const ProductCard: React.FC<inputProps> = ({
   favourites,
   reRender,
 }) => {
-  console.log(item, "item");
-
   const presentInWatchList = watchlist?.find((ele) => ele.id === item.id);
   const presentInFavourites = favourites?.find((ele) => ele.id === item.id);
   return (

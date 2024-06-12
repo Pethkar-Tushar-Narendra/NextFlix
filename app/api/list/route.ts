@@ -15,6 +15,7 @@ import {
 } from "@/Components/Functions";
 import connectMongoDB from "@/libs/mongodb";
 import Users from "@/models/users";
+import RatingAndReviews from "@/models/rating";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
@@ -24,16 +25,21 @@ export async function GET(request: Request) {
   const searchParams = new URL(request.url).searchParams;
   let watchList = [];
   let favourites = [];
+  let reviews = [];
   try {
     const session = await getServerSession(authOptions);
     await connectMongoDB();
     const userFromDataBase = await Users.findOne({
       userName: session?.user?.name,
     });
-    console.log(userFromDataBase, "userFromDataBase");
-
     watchList = [...userFromDataBase?.watchlist];
     favourites = [...userFromDataBase?.favourites];
+  } catch (error) {
+    return NextResponse.json({ message: "invalid user" }, { status: 201 });
+  }
+  try {
+    const getReviewsAndRatings = await RatingAndReviews.find({});
+    console.log(getReviewsAndRatings, "getReviewsAndRatings");
   } catch (error) {
     return NextResponse.json({ message: "invalid user" }, { status: 201 });
   }
@@ -197,9 +203,18 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { item, watchlist, favourite, add } = await request.json();
+    const { item, watchlist, favourite, add, review, user, rating } =
+      await request.json();
     const session = await getServerSession(authOptions);
     await connectMongoDB();
+    if (review) {
+      const addReview = await RatingAndReviews.insertMany({
+        user,
+        rating,
+        review,
+      });
+      return NextResponse.json(addReview, { status: 201 });
+    }
     const updatedDocument = await Users.findOneAndUpdate(
       {
         userName: session?.user?.name,

@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import YoutubePlayer from "./YoutubePlayer";
 import { addWatchListHandler } from "./ApiCallingFunctions";
+import ReviewCard from "./ReviewCard";
+import AddReview from "./AddReview";
 
 type data = {
   videos: [];
@@ -45,67 +47,72 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
   const { watchList, favourites, ...item } = data;
   const presentInWatchList = watchList.find((ele) => ele.id === item?.id);
   const presentInFavourites = favourites.find((ele) => ele.id === item?.id);
+
+  console.log(movieReviews, "movieReviews");
+
   return (
-    <div className="flex flex-wrap w-full h-full">
-      <img
-        style={{
-          width: "150px",
-          height: "100%",
-          cursor: "pointer",
-        }}
-        src={`https://image.tmdb.org/t/p/w500${data?.poster_path}`}
-      />
-      <div
-        style={{
-          width: "calc(100% - 150px)",
-          height: "100%",
-        }}
-        className=""
-      >
-        <p>
-          Title:{" "}
-          {fetch === "movie" ? data?.original_title : data?.original_name}
-        </p>
-        <p>
-          Release Date:{" "}
-          {fetch === "movie" ? data?.release_date : data?.first_air_date}
-        </p>
-        <p>
-          Synopsis:{" "}
-          {data?.overview === "" ? "No synopsis available" : data?.overview}
-        </p>
-        <p>Ratings: {data?.vote_average}/10</p>
-        <div className="flex gap-2 p-2">
-          <button
-            className="border border-black p-1"
-            onClick={async (e) => {
-              e.preventDefault();
-              await addWatchListHandler(
-                { ...item },
-                true,
-                false,
-                !presentInWatchList
-              );
-              setReRender((prev: boolean) => !prev);
-            }}
-          >
-            {!presentInWatchList ? "Add to" : "Remove from"} Watchlist
-          </button>
-          <button
-            className="border border-black p-1"
-            onClick={async (e) => {
-              e.preventDefault();
-              await addWatchListHandler(
-                { ...item },
-                false,
-                true,
-                !presentInFavourites
-              );
-              setReRender((prev: boolean) => !prev);
-            }}
-          >
-            {!presentInFavourites ? "Add to" : "Remove from"} Favourites
-          </button>
+    <div className="flex flex-wrap w-full h-full flex-col gap-2">
+      <div className="flex gap-2">
+        <img
+          style={{
+            width: "150px",
+            height: "100%",
+            cursor: "pointer",
+          }}
+          src={`https://image.tmdb.org/t/p/w500${data?.poster_path}`}
+        />
+        <div
+          style={{
+            width: "calc(100% - 150px)",
+            height: "100%",
+          }}
+          className=""
+        >
+          <p>
+            Title:{" "}
+            {fetch === "movie" ? data?.original_title : data?.original_name}
+          </p>
+          <p>
+            Release Date:{" "}
+            {fetch === "movie" ? data?.release_date : data?.first_air_date}
+          </p>
+          <p>
+            Synopsis:{" "}
+            {data?.overview === "" ? "No synopsis available" : data?.overview}
+          </p>
+          <p>Ratings: {data?.vote_average}/10</p>
+          <div className="flex gap-2 p-2">
+            <button
+              className="border border-black p-1"
+              onClick={async (e) => {
+                e.preventDefault();
+                await addWatchListHandler(
+                  { ...item },
+                  true,
+                  false,
+                  !presentInWatchList
+                );
+                setReRender((prev: boolean) => !prev);
+              }}
+            >
+              {!presentInWatchList ? "Add to" : "Remove from"} Watchlist
+            </button>
+            <button
+              className="border border-black p-1"
+              onClick={async (e) => {
+                e.preventDefault();
+                await addWatchListHandler(
+                  { ...item },
+                  false,
+                  true,
+                  !presentInFavourites
+                );
+                setReRender((prev: boolean) => !prev);
+              }}
+            >
+              {!presentInFavourites ? "Add to" : "Remove from"} Favourites
+            </button>
+          </div>
         </div>
       </div>
       <img
@@ -121,17 +128,22 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
           <YoutubePlayer videoId={video?.key} />
         </div>
       )}
+      <AddReview />
       {movieReviews?.length > 0 && (
-        <div className="w-full h-full">
+        <div className="flex flex-col w-100 gap-2">
           {movieReviews?.map((item, i) => (
-            <div key={i}>
-              <p>{item.content}</p>
-            </div>
+            <ReviewCard
+              author={item.author}
+              content={item.content}
+              rating={item.author_details.rating}
+            />
           ))}
         </div>
       )}
-      <p>Similar Movies</p>
-      <div className="w-100">
+      <div>
+        <p>Similar Movies</p>
+      </div>
+      <div className="w-100 flex flex-col gap-1">
         {similarMovies?.map((item, i) => (
           <div key={i}>
             <ProductCard

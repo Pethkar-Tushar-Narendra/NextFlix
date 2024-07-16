@@ -1,9 +1,11 @@
-import axios from "axios";
-import React, { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { addWatchListHandler } from "./ApiCallingFunctions";
 
 const AddReview = () => {
   const [review, setReview] = useState<string>("");
+  const { data } = useSession();
+
   const onSubmit = async (e: any) => {
     e.preventDefault();
     try {
@@ -13,7 +15,7 @@ const AddReview = () => {
         false,
         false,
         review,
-        "tpethkar@osidigital.com",
+        data?.user?.email || null,
         5
       );
     } catch (error) {}
@@ -21,15 +23,17 @@ const AddReview = () => {
   return (
     <div className="w-full">
       <p>Add Review</p>
-      <form onSubmit={onSubmit} className="flex w-full flex-col gap-1">
+      <form className="flex w-full flex-col gap-1">
+        <label>Add comment :</label>
         <input
           type="text"
           value={review}
           onChange={(e: any) => setReview(e?.target?.value || "")}
           required
         />
+        <p>Add Rating :</p>
         <input type="number" max={10} min={0} required />
-        <input type="submit" value={"Add"} />
+        <input type="submit" value={"Add"} style={{ cursor: "pointer" }} />
       </form>
     </div>
   );

@@ -57,10 +57,9 @@ const SearchBar = ({ fetch }: any) => {
   }, [deboucedValue]);
 
   return (
-    <div className="border border-red" ref={wrapperRef}>
+    <div ref={wrapperRef} className="relative h-100">
       <InputFields
-        label={`Search By ${fetch} Title`}
-        placeholder={`write ${fetch} name...`}
+        placeholder={`Type ${fetch === "tv" ? "Tv Show" : "Movie"} name...`}
         className="border-red border"
         onFocus={() => {
           setOpen(true);
@@ -70,13 +69,12 @@ const SearchBar = ({ fetch }: any) => {
         onChange={(e) => setValue(e?.target?.value || "")}
       />
       {open && (
-        <ul className="flex flex-col">
+        <ul className="flex flex-col absolute bg-white text-black w-full search_menu mt-2">
           {data?.map((item) => {
-            console.log(item, "item");
             return (
-              <Link href={`/${fetch}/${item.id}`}>
-                <li className="cursor-pointer hover:bg-red-200">{item.name}</li>
-              </Link>
+              <li className="cursor-pointer hover:bg-gray-200 p-2">
+                <Link href={`/${fetch}/${item.id}`}>{item.name}</Link>
+              </li>
             );
           })}
         </ul>

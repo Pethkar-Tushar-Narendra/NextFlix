@@ -23,8 +23,8 @@ const WatchList = () => {
   return (
     <div className="flex flex-col gap-3">
       <p className="p-3">Favourites</p>
-      {unqueArray?.map((ele) => (
-        <div>
+      {unqueArray?.map((ele, key) => (
+        <div key={key}>
           <ProductCard
             item={ele}
             fetch="movie"

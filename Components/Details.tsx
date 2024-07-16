@@ -20,6 +20,8 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
     favourites: [{ id: 0 }],
     watchList: [{ id: 0 }],
   });
+  // console.log(data, "data in movie details");
+
   const [reRender, setReRender] = useState<boolean>(true);
   useEffect(() => {
     const fetchData = async () => {
@@ -47,8 +49,6 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
   const { watchList, favourites, ...item } = data;
   const presentInWatchList = watchList.find((ele) => ele.id === item?.id);
   const presentInFavourites = favourites.find((ele) => ele.id === item?.id);
-
-  console.log(movieReviews, "movieReviews");
 
   return (
     <div className="flex flex-wrap w-full h-full flex-col gap-2">
@@ -159,7 +159,7 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
       <p>Recommended Movies</p>
       <div className="w-100">
         {recommendedMovies?.map((item: any, i: number) => (
-          <div key={i}>
+          <div key={i} className="flex flex-col gap-1">
             <ProductCard
               fetch={fetch}
               item={item}

@@ -12,11 +12,13 @@ const ReviewCard: React.FC<review> = ({ rating, author, content }) => {
     <div className="flex p-2 flex-col bg-gray-200">
       <p>{author}</p>
       <p>{content}</p>
-      <div className="flex gap-1">
-        {[...Array(10)].map((_, index) => (
-          <Star filled={index + 1 <= rating} />
-        ))}
-      </div>
+      {rating && (
+        <div className="flex gap-1">
+          {[...Array(10)].map((_, index) => (
+            <Star filled={index + 1 <= rating} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

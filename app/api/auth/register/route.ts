@@ -9,9 +9,23 @@ export async function POST(request: Request) {
     const { userName, password, email } = await request.json();
     await connectMongoDB();
     const encryptedPassword = await hashPassword(password);
-    await Users.create({ userName, password: encryptedPassword, email });
+
+    await Users.insertMany({
+      userName,
+      password: encryptedPassword,
+      email,
+      watchlist: [],
+      favourites: [],
+    });
+
+    console.log(
+      { userName, password: encryptedPassword, email },
+      "register logging"
+    );
     return NextResponse.json({ message: "User Registered" }, { status: 201 });
   } catch (error) {
+    console.log("error user creation", error);
+
     return NextResponse.json({ error }, { status: 201 });
   }
 }

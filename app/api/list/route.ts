@@ -15,7 +15,7 @@ import {
 } from "@/Components/Functions";
 import connectMongoDB from "@/libs/mongodb";
 import Users from "@/models/users";
-import RatingAndReviews from "@/models/rating";
+// import RatingAndReviews from "@/models/rating";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
@@ -37,12 +37,12 @@ export async function GET(request: Request) {
   } catch (error) {
     return NextResponse.json({ message: "invalid user" }, { status: 201 });
   }
-  try {
-    const getReviewsAndRatings = await RatingAndReviews.find({});
-    console.log(getReviewsAndRatings, "getReviewsAndRatings");
-  } catch (error) {
-    return NextResponse.json({ message: "invalid user" }, { status: 201 });
-  }
+  // try {
+  //   const getReviewsAndRatings = await RatingAndReviews.find({});
+  //   console.log(getReviewsAndRatings, "getReviewsAndRatings");
+  // } catch (error) {
+  //   return NextResponse.json({ message: "invalid user" }, { status: 201 });
+  // }
   const fetch = searchParams.get("fetch");
   const page = searchParams.get("page") || "1";
   const getGenre = searchParams.get("getGenre");
@@ -207,14 +207,14 @@ export async function POST(request: Request) {
       await request.json();
     const session = await getServerSession(authOptions);
     await connectMongoDB();
-    if (review) {
-      const addReview = await RatingAndReviews.insertMany({
-        user,
-        rating,
-        review,
-      });
-      return NextResponse.json(addReview, { status: 201 });
-    }
+    // if (review) {
+    //   const addReview = await RatingAndReviews.insertMany({
+    //     user,
+    //     rating,
+    //     review,
+    //   });
+    //   return NextResponse.json(addReview, { status: 201 });
+    // }
     const updatedDocument = await Users.findOneAndUpdate(
       {
         userName: session?.user?.name,

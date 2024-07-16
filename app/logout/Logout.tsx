@@ -2,7 +2,7 @@
 import { signOut } from "next-auth/react";
 import React from "react";
 
-const Logout = () => {
+const Logout = ({ className }: { className: string }) => {
   const logoutHandler = async () => {
     try {
       await signOut();
@@ -11,7 +11,11 @@ const Logout = () => {
       console.log(error, "error");
     }
   };
-  return <button onClick={logoutHandler}>Logout</button>;
+  return (
+    <button onClick={logoutHandler} className={className}>
+      Logout
+    </button>
+  );
 };
 
 export default Logout;

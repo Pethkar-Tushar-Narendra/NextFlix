@@ -1,4 +1,5 @@
 "use client";
+import NavBar from "@/Components/NavBar";
 import ProductCard from "@/Components/ProductCard";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -21,19 +22,22 @@ const WatchList = () => {
   const unqueArray = [...new Map(data.map((item) => [item.id, item])).values()];
 
   return (
-    <div className="flex flex-col gap-3">
-      <p className="p-3">Favourites</p>
-      {unqueArray?.map((ele, key) => (
-        <div key={key}>
-          <ProductCard
-            item={ele}
-            fetch="movie"
-            watchlist={data || [{ id: 0 }]}
-            reRender={setReRender}
-            favourites={data || [{ id: 0 }]}
-          />
+    <div className="w-screen h-screen overflow-x-hidden bg-gray-900 text-white">
+      <NavBar />
+      <div className="p-4">
+        <p className="mb-4">Favourites</p>
+        <div className="flex gap-2 flex-wrap justify-center items-center">
+          {unqueArray?.map((ele, key) => (
+            <ProductCard
+              item={ele}
+              fetch="movie"
+              watchlist={data || [{ id: 0 }]}
+              reRender={setReRender}
+              favourites={data || [{ id: 0 }]}
+            />
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 };

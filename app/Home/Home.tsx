@@ -1,8 +1,10 @@
 "use client";
+import ModalPopup from "@/Components/ModalPopup";
 import NavBar from "@/Components/NavBar";
 import ProductCard from "@/Components/ProductCard";
 import SearchBar from "@/Components/SearchBar";
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 interface movies {
@@ -33,6 +35,7 @@ const Home: React.FC = () => {
   const [genreSelected, setGenreSelected] = useState<genres[]>([]);
   const [category, setCategory] = useState("");
   const [reRender, setReRender] = useState(true);
+  const [openDetails, setOpenDetails] = useState(true);
   const categorySelected = category === "" ? {} : { category };
   const [page, setPage] = useState<number>(1);
   const [maxPageNo, setMaxPageNo] = useState();
@@ -96,13 +99,16 @@ const Home: React.FC = () => {
     setPage(1);
   };
 
-  console.log(data, "data");
+  const modalHandler = () => {
+    setOpenDetails((prev) => !prev);
+  };
 
   return (
     <div className="w-screen h-screen overflow-x-hidden bg-gray-900 text-white">
       <NavBar />
       <div>
         <div className="flex p-4 justify-between flex-col sm:flex-col md:flex-row gap-2">
+          <ModalPopup open={openDetails} onChange={modalHandler} />
           <div className="flex gap-2">
             <button
               className={`border border-white p-2 rounded ${
@@ -198,9 +204,6 @@ const Home: React.FC = () => {
           </div>
         </div>
         <div className="p-4">
-          {/* <p>Page:{data?.page || 0}</p>
-          <p>Total Page:{data?.total_pages || 0}</p>
-          <p>Total Result:{data?.total_results || 0}</p> */}
           <div className="pb-2 flex gap-2 justify-start items-center">
             <button
               className="border border-white rounded p-1"
@@ -222,17 +225,29 @@ const Home: React.FC = () => {
               next page
             </button>
           </div>
-          <div className="gap-4 flex flex-col text-black">
-            {data?.results?.map((item, i) => (
-              <ProductCard
-                fetch={fetch}
-                item={item}
-                reRender={setReRender}
-                key={i}
-                watchlist={data?.watchList || []}
-                favourites={data?.favourites || []}
-              />
-            ))}
+          <div className="gap-4 flex flex-wrap text-black items-center justify-center">
+            {data?.results?.map(
+              (
+                item: {
+                  id: string;
+                },
+                i
+              ) => (
+                <Link
+                  href={`/${fetch}/${item.id}`}
+                  className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white"
+                >
+                  <ProductCard
+                    fetch={fetch}
+                    item={item}
+                    reRender={setReRender}
+                    key={i}
+                    watchlist={data?.watchList || []}
+                    favourites={data?.favourites || []}
+                  />
+                </Link>
+              )
+            )}
           </div>
         </div>
       </div>

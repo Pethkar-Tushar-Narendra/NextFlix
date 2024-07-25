@@ -11,7 +11,7 @@ const ShowDetails = ({
   presentInWatchList,
 }: any) => {
   return (
-    <div className="lg:w-5/12 flex flex-col justify-start items-start h-full p-4 lg:py-8 gap-2">
+    <div className="lg:w-5/12 flex flex-col justify-start items-start h-full lg:py-8 gap-2">
       <div className="flex gap-3 items-end">
         <p className="text-3xl font-bold text-white shadow-lg">
           {data?.title || data?.original_name}

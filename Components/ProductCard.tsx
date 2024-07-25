@@ -21,14 +21,25 @@ const ProductCard: React.FC<inputProps> = ({
 
   return (
     <>
-      <img
-        style={{
-          width: "150px",
-          height: "225px",
-          cursor: "pointer",
-        }}
-        src={`https://image.tmdb.org/t/p/w500${item?.poster_path}`}
-      />
+      {item?.poster_path ? (
+        <img
+          style={{
+            width: "150px",
+            height: "225px",
+            cursor: "pointer",
+          }}
+          src={`https://image.tmdb.org/t/p/w500${item?.poster_path}`}
+        />
+      ) : (
+        <div
+          style={{
+            width: "150px",
+            height: "225px",
+          }}
+        >
+          No Poster
+        </div>
+      )}
       <div className="flex gap-1 justify-start w-full flex-col items-between">
         <p className="max-w-full md:max-w-36	overflow-hidden text-ellipsis whitespace-nowrap">
           {fetch === "movie" ? item?.original_title : item?.original_name}

@@ -2,6 +2,7 @@
 import NavBar from "@/Components/NavBar";
 import ProductCard from "@/Components/ProductCard";
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const WatchList = () => {
@@ -19,24 +20,39 @@ const WatchList = () => {
     postData();
   }, [reRender]);
 
-  const unqueArray = [...new Map(data.map((item) => [item.id, item])).values()];
+  const unqueArray = [
+    ...new Map(
+      data?.filter((item) => item.id).map((item) => [item.id, item])
+    ).values(),
+  ];
 
   return (
     <div className="w-screen h-screen overflow-x-hidden bg-gray-900 text-white">
       <NavBar />
-      <div className="p-4">
-        <p className="mb-4">WatchList</p>
-        <div className="flex gap-2 flex-wrap justify-center items-center">
-          {unqueArray?.map((ele) => (
-            <ProductCard
-              item={ele}
-              fetch="movie"
-              watchlist={data || [{ id: 0 }]}
-              reRender={setReRender}
-              favourites={data || [{ id: 0 }]}
-            />
-          ))}
-        </div>
+      <div className=" p-4 w-full text-white flex flex-wrap justify-center items-center gap-2 mt-2">
+        <p className="w-full">WatchList</p>
+        {unqueArray?.map(
+          (
+            item: {
+              id: string;
+            },
+            i: number
+          ) => (
+            <Link
+              href={`/${fetch}/${item.id}`}
+              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white"
+            >
+              <ProductCard
+                fetch={"movie"}
+                item={item}
+                reRender={setReRender}
+                key={i}
+                watchlist={[...unqueArray] || []}
+                favourites={data?.favourites || []}
+              />
+            </Link>
+          )
+        )}
       </div>
     </div>
   );

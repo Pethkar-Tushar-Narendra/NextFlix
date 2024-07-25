@@ -1,11 +1,11 @@
 "use client";
 
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import ShowDetails from "./ShowDetails";
-import { Router } from "next/router";
-import Link from "next/link";
+import ProductCard from "./ProductCard";
 
 type data = {
   videos: [];
@@ -34,6 +34,7 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
     };
     fetchData();
   }, [reRender]);
+
   const video =
     data?.videos?.length === 1
       ? data?.videos[0]
@@ -50,9 +51,9 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
   const screenWidth = screen.width > 1024;
 
   return (
-    <div className="w-screen h-screen overflow-x-hidden bg-gray-900 text-white">
+    <div className=" w-screen h-screen overflow-x-hidden bg-gray-900 text-white">
       <NavBar />
-      <div className="flex flex-col lg:flex-row lg:justify-between calc-100vh-minus-72px justify-start items-start lg:items-center">
+      <div className="flex flex-col lg:flex-row lg:justify-between justify-start items-start lg:items-center px-4 py-2">
         {screenWidth && (
           <ShowDetails
             data={data}
@@ -69,7 +70,7 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
               ? `/movieTrailer/${video?.key}`
               : `/tvTrailer/${video?.key}`
           }
-          className={`w-full lg:w-7/12 h-fit bg-contain bg-no-repeat bg-center bg-start flex items-center justify-center ${
+          className={`mb-2 lg:mb-0 w-full lg:w-7/12 h-fit bg-contain bg-no-repeat bg-center bg-start flex items-center justify-center ${
             video?.key && "cursor-pointer"
           } relative lg:overflow-hidden`}
         >
@@ -112,118 +113,57 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
           />
         )}
       </div>
-      {/* <div className="flex flex-wrap w-full h-full flex-col gap-2 bg-gray-900 text-white">
-        <div className="flex gap-2">
-          <img
-            style={{
-              width: "150px",
-              height: "100%",
-              cursor: "pointer",
-            }}
-            src={`https://image.tmdb.org/t/p/w500${data?.poster_path}`}
-          />
-          <div
-            style={{
-              width: "calc(100% - 150px)",
-              height: "100%",
-            }}
-            className=""
-          >
-            <p>
-              Title:{" "}
-              {fetch === "movie" ? data?.original_title : data?.original_name}
-            </p>
-            <p>
-              Release Date:{" "}
-              {fetch === "movie" ? data?.release_date : data?.first_air_date}
-            </p>
-            <p>
-              Synopsis:{" "}
-              {data?.overview === "" ? "No synopsis available" : data?.overview}
-            </p>
-            <p>Ratings: {data?.vote_average}/10</p>
-            <div className="flex gap-2 p-2">
-              <button
-                className="border border-white p-1"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await addWatchListHandler(
-                    { ...item },
-                    true,
-                    false,
-                    !presentInWatchList
-                  );
-                  setReRender((prev: boolean) => !prev);
-                }}
-              >
-                {!presentInWatchList ? "Add to" : "Remove from"} Watchlist
-              </button>
-              <button
-                className="border border-white p-1"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await addWatchListHandler(
-                    { ...item },
-                    false,
-                    true,
-                    !presentInFavourites
-                  );
-                  setReRender((prev: boolean) => !prev);
-                }}
-              >
-                {!presentInFavourites ? "Add to" : "Remove from"} Favourites
-              </button>
-            </div>
-          </div>
-        </div>
-        {video?.key && (
-          <div className="w-full h-full">
-            <YoutubePlayer videoId={video?.key} />
-          </div>
-        )}
-        <AddReview />
-        {movieReviews?.length > 0 && (
-          <div className="flex flex-col w-100 gap-2">
-            {movieReviews?.map((item, i) => (
-              <ReviewCard
-                author={item.author}
-                content={item.content}
-                rating={item.author_details.rating}
-              />
-            ))}
-          </div>
-        )}
-        <div>
-          <p>Similar Movies</p>
-        </div>
-        <div className="w-100 flex flex-col gap-1">
-          {similarMovies?.map((item, i) => (
-            <div key={i}>
+
+      <div className="w-full p-4 text-white flex flex-wrap justify-center items-center gap-2 mt-1">
+        <p className="w-full">Recommended movies:</p>
+        {recommendedMovies?.map(
+          (
+            item: {
+              id: string;
+            },
+            i: number
+          ) => (
+            <Link
+              href={`/${fetch}/${item.id}`}
+              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white"
+            >
               <ProductCard
                 fetch={fetch}
                 item={item}
-                favourites={data?.favourites || [{ id: 0 }]}
-                watchlist={data?.watchList || [{ id: 0 }]}
                 reRender={setReRender}
+                key={i}
+                watchlist={data?.watchList || []}
+                favourites={data?.favourites || []}
               />
-            </div>
-          ))}
-        </div>
-        <p>Recommended Movies</p>
-        <div className="w-100">
-          {recommendedMovies?.map((item: any, i: number) => (
-            <div key={i} className="flex flex-col gap-1">
+            </Link>
+          )
+        )}
+      </div>
+      <div className="w-full  p-4 text-white flex flex-wrap justify-center items-center gap-2 mt-2">
+        <p className="w-full">Similar movies:</p>
+        {similarMovies?.map(
+          (
+            item: {
+              id: string;
+            },
+            i: number
+          ) => (
+            <Link
+              href={`/${fetch}/${item.id}`}
+              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white"
+            >
               <ProductCard
                 fetch={fetch}
                 item={item}
-                favourites={data?.favourites || [{ id: 0 }]}
-                watchlist={data?.watchList || [{ id: 0 }]}
                 reRender={setReRender}
+                key={i}
+                watchlist={data?.watchList || []}
+                favourites={data?.favourites || []}
               />
-            </div>
-          ))}
-        </div>
-      </div> */}
+            </Link>
+          )
+        )}
+      </div>
     </div>
   );
 };

@@ -225,7 +225,7 @@ const Home: React.FC = () => {
               next page
             </button>
           </div>
-          <div className="gap-4 flex flex-wrap text-black items-center justify-center">
+          <div className="gap-4 py-2 flex flex-wrap text-black items-center justify-center">
             {data?.results?.map(
               (
                 item: {

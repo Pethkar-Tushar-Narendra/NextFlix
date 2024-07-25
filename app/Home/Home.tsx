@@ -35,7 +35,7 @@ const Home: React.FC = () => {
   const [genreSelected, setGenreSelected] = useState<genres[]>([]);
   const [category, setCategory] = useState("");
   const [reRender, setReRender] = useState(true);
-  const [openDetails, setOpenDetails] = useState(true);
+  const [openDetails, setOpenDetails] = useState(false);
   const categorySelected = category === "" ? {} : { category };
   const [page, setPage] = useState<number>(1);
   const [maxPageNo, setMaxPageNo] = useState();

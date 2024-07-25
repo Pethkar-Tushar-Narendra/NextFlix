@@ -10,7 +10,7 @@ const NavBar = () => {
   const session = useSession();
   const username = session?.data?.user?.name;
   return (
-    <div className="w-screen px-8 py-4 bg-transparent md:pr-8 md:px-4 flex justify-between">
+    <div className="w-full px-8 py-4 bg-transparent md:px-4 flex justify-between">
       <p className="text-4xl font-bold text-red-500" id="title_icon">
         <Link href={"/"}>{screenWidth ? "Nextflix" : "N"}</Link>
       </p>

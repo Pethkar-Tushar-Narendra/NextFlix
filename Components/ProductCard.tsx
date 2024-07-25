@@ -22,14 +22,17 @@ const ProductCard: React.FC<inputProps> = ({
   return (
     <>
       {item?.poster_path ? (
-        <img
-          style={{
-            width: "150px",
-            height: "225px",
-            cursor: "pointer",
-          }}
-          src={`https://image.tmdb.org/t/p/w500${item?.poster_path}`}
-        />
+        <div className="w-full h-full overflow-hidden">
+          <img
+            style={{
+              width: "150px",
+              height: "225px",
+              cursor: "pointer",
+            }}
+            className="transform transition-transform duration-500 hover:scale-110"
+            src={`https://image.tmdb.org/t/p/w500${item?.poster_path}`}
+          />
+        </div>
       ) : (
         <div
           style={{

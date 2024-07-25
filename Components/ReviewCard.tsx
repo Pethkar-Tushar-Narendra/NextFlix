@@ -9,7 +9,7 @@ interface review {
 
 const ReviewCard: React.FC<review> = ({ rating, author, content }) => {
   return (
-    <div className="flex p-2 flex-col bg-gray-200">
+    <div className="flex text-gray-500 py-4 flex-col">
       <p>{author}</p>
       <p>{content}</p>
       {rating && (

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import ShowDetails from "./ShowDetails";
 import ProductCard from "./ProductCard";
+import ReviewCard from "./ReviewCard";
 
 type data = {
   videos: [];
@@ -49,11 +50,12 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
   const presentInWatchList = watchList?.find((ele) => ele.id === item?.id);
   const presentInFavourites = favourites?.find((ele) => ele.id === item?.id);
   const screenWidth = screen.width > 1024;
+  console.log(movieReviews, "movieReviews");
 
   return (
     <div className=" w-screen h-screen overflow-x-hidden bg-gray-900 text-white">
       <NavBar />
-      <div className="flex flex-col lg:flex-row lg:justify-between justify-start items-start lg:items-center px-4 py-2">
+      <div className="flex flex-col lg:flex-row lg:justify-between justify-start items-start lg:items-center px-4 py-2 gap-2">
         {screenWidth && (
           <ShowDetails
             data={data}
@@ -125,7 +127,7 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
           ) => (
             <Link
               href={`/${fetch}/${item.id}`}
-              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white"
+              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white overflow-hidden"
             >
               <ProductCard
                 fetch={fetch}
@@ -150,7 +152,7 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
           ) => (
             <Link
               href={`/${fetch}/${item.id}`}
-              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white"
+              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white overflow-hidden"
             >
               <ProductCard
                 fetch={fetch}
@@ -164,6 +166,21 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
           )
         )}
       </div>
+      {movieReviews && (
+        <div className="p-4 flex flex-col ">
+          <p className="w-full text-3xl">
+            {movieReviews?.length + 1} Member Reviews for{" "}
+            {data?.title || data?.original_name}{" "}
+          </p>
+          {movieReviews?.map((review, i) => (
+            <ReviewCard
+              author={review.author}
+              content={review.content}
+              rating={review.author_details.rating}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -41,7 +41,7 @@ const WatchList = () => {
           ) => (
             <Link
               href={`/${fetch}/${item.id}`}
-              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white"
+              className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white overflow-hidden"
             >
               <ProductCard
                 fetch={"movie"}

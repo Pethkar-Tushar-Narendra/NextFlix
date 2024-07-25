@@ -111,7 +111,7 @@ const Home: React.FC = () => {
           <ModalPopup open={openDetails} onChange={modalHandler} />
           <div className="flex gap-2">
             <button
-              className={`border border-white p-2 rounded ${
+              className={`border border-white p-2 rounded hover:bg-red-500 ${
                 fetch === "movie" && "bg-red-500"
               }`}
               onClick={() => {
@@ -124,7 +124,7 @@ const Home: React.FC = () => {
               Movies
             </button>
             <button
-              className={`border border-white p-2 rounded ${
+              className={`border border-white p-2 rounded hover:bg-red-500 ${
                 fetch === "tv" && "bg-red-500"
               }`}
               onClick={() => {
@@ -140,7 +140,7 @@ const Home: React.FC = () => {
           <div className="flex gap-2 flex-col md:flex-row">
             <div className="flex gap-2">
               <button
-                className={`border border-white p-2 rounded ${
+                className={`border border-white p-2 rounded hover:bg-red-500 ${
                   category === "" && "bg-red-500"
                 }`}
                 onClick={() => handlerCategoryChange("")}
@@ -148,7 +148,7 @@ const Home: React.FC = () => {
                 All
               </button>
               <button
-                className={`border border-white p-2 rounded ${
+                className={`border border-white p-2 rounded hover:bg-red-500 ${
                   category === "trending" && "bg-red-500"
                 }`}
                 onClick={() => handlerCategoryChange("trending")}
@@ -156,7 +156,7 @@ const Home: React.FC = () => {
                 trending
               </button>
               <button
-                className={`border border-white p-2 rounded ${
+                className={`border border-white p-2 rounded hover:bg-red-500 ${
                   category === "top-rated" && "bg-red-500"
                 }`}
                 onClick={() => handlerCategoryChange("top-rated")}
@@ -165,7 +165,7 @@ const Home: React.FC = () => {
               </button>
               {fetch === "movie" && (
                 <button
-                  className={`border border-white p-2 rounded ${
+                  className={`border border-white p-2 rounded hover:bg-red-500 ${
                     category === "upcoming" && "bg-red-500"
                   }`}
                   onClick={() => handlerCategoryChange("upcoming")}
@@ -195,7 +195,7 @@ const Home: React.FC = () => {
             ))}
             {genreSelected.length !== 0 && (
               <button
-                className={`border border-white rounded p-1 `}
+                className={`border border-white rounded p-1 hover:bg-red-500 `}
                 onClick={() => setGenreSelected([])}
               >
                 Clear Genre
@@ -206,7 +206,7 @@ const Home: React.FC = () => {
         <div className="p-4">
           <div className="pb-2 flex gap-2 justify-start items-center">
             <button
-              className="border border-white rounded p-1"
+              className="border border-white rounded p-1 hover:bg-red-500 disabled:hover:bg-gray-500"
               disabled={page === 1}
               onClick={() => setPage((prev) => (prev > 1 ? prev - 1 : prev))}
             >
@@ -214,7 +214,7 @@ const Home: React.FC = () => {
             </button>
             <p>{page}</p>
             <button
-              className="border border-white rounded p-1"
+              className="border border-white rounded p-1 hover:bg-red-500 disabled:hover:bg-gray-500"
               disabled={!maxPageNo}
               onClick={() =>
                 setPage((prev) =>
@@ -235,7 +235,7 @@ const Home: React.FC = () => {
               ) => (
                 <Link
                   href={`/${fetch}/${item.id}`}
-                  className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white"
+                  className="bg-gray-700 shadow-lg rounded p-4 flex gap-2 flex-col w-full md:w-fit justify-center items-center text-white overflow-hidden"
                 >
                   <ProductCard
                     fetch={fetch}

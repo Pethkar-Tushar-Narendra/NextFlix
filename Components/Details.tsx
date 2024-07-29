@@ -50,7 +50,6 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
   const presentInWatchList = watchList?.find((ele) => ele.id === item?.id);
   const presentInFavourites = favourites?.find((ele) => ele.id === item?.id);
   const screenWidth = screen.width > 1024;
-  console.log(movieReviews, "movieReviews");
 
   return (
     <div className=" w-screen h-screen overflow-x-hidden bg-gray-900 text-white">
@@ -69,8 +68,8 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
         <Link
           href={
             fetch === "movie"
-              ? `/movieTrailer/${video?.key}`
-              : `/tvTrailer/${video?.key}`
+              ? `/movieTrailer/${video?.key}?movieDetails=/${fetch}/${id}`
+              : `/tvTrailer/${video?.key}?movieDetails=/${fetch}/${id}`
           }
           className={`mb-2 lg:mb-0 w-full lg:w-7/12 h-fit bg-contain bg-no-repeat bg-center bg-start flex items-center justify-center ${
             video?.key && "cursor-pointer"
@@ -166,11 +165,11 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
           )
         )}
       </div>
-      {movieReviews && (
-        <div className="p-4 flex flex-col ">
+      {movieReviews && movieReviews?.length > 0 && (
+        <div className="p-4 flex flex-col border-t-2 border-red-900">
           <p className="w-full text-3xl">
             {movieReviews?.length + 1} Member Reviews for{" "}
-            {data?.title || data?.original_name}{" "}
+            {data?.title || data?.original_name}
           </p>
           {movieReviews?.map((review, i) => (
             <ReviewCard

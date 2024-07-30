@@ -46,12 +46,10 @@ const YoutubePlayer = ({
       )}
       <Link
         href={searchParams || "/"}
-        className="absolute top-7 right-7 md:top-20 md:right-10 cursor-pointer"
+        className="absolute top-30 right-10 lg:top-20 lg:right-10 cursor-pointer z-99999"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          // width="120"
-          // height="120"
           fill="#ffffff"
           className="w-16 h-16"
           viewBox="0 0 16 16"

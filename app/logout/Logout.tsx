@@ -6,6 +6,7 @@ const Logout = ({ className }: { className: string }) => {
   const logoutHandler = async () => {
     try {
       await signOut();
+      localStorage.removeItem("user");
       window.location.href = "/";
     } catch (error) {
       console.log(error, "error");

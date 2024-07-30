@@ -7,6 +7,7 @@ import NavBar from "./NavBar";
 import ShowDetails from "./ShowDetails";
 import ProductCard from "./ProductCard";
 import ReviewCard from "./ReviewCard";
+import AddReview from "./AddReview";
 
 type data = {
   videos: [];
@@ -22,10 +23,11 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
   });
 
   const [reRender, setReRender] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/list", {
+        const response = await axios.get("/api/list", {
           params: { fetch, getDetail: true, id },
         });
         setData(response?.data || {});
@@ -45,6 +47,7 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
   const similarMovies = data?.similarMovies || [];
   const recommendedMovies = data?.recommendedMovies || [];
   const movieReviews = data?.reviews || [];
+  let userReviews = data?.userReviews || [];
 
   const { watchList, favourites, ...item } = data;
   const presentInWatchList = watchList?.find((ele) => ele.id === item?.id);
@@ -165,6 +168,7 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
           )
         )}
       </div>
+      <AddReview id={id} fetch={fetch} />
       {movieReviews && movieReviews?.length > 0 && (
         <div className="p-4 flex flex-col border-t-2 border-red-900">
           <p className="w-full text-3xl">
@@ -176,6 +180,13 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
               author={review.author}
               content={review.content}
               rating={review.author_details.rating}
+            />
+          ))}
+          {userReviews?.map((review, i) => (
+            <ReviewCard
+              author={review.userName}
+              content={review.review}
+              rating={review.rating}
             />
           ))}
         </div>

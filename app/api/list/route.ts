@@ -12,10 +12,10 @@ import {
   getTrending,
   getUpcomingMovies,
   getVideos,
-} from "@/Components/Functions";
-import connectMongoDB from "@/libs/mongodb";
-import Users from "@/models/users";
-// import RatingAndReviews from "@/models/rating";
+} from "../../../Components/Functions";
+import connectMongoDB from "../../../libs/mongodb";
+import Users from "../../../models/users";
+import RatingAndReviews from "../../../models/rating";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
@@ -25,24 +25,27 @@ export async function GET(request: Request) {
   const searchParams = new URL(request.url).searchParams;
   let watchList = [];
   let favourites = [];
-  let reviews = [];
+  let reviews;
+  let userReviews = [];
+  let userObject;
   try {
     const session = await getServerSession(authOptions);
+
     await connectMongoDB();
-    const userFromDataBase = await Users.findOne({
+
+    userObject = await Users.findOne({
       userName: session?.user?.name,
     });
-    watchList = [...userFromDataBase?.watchlist];
-    favourites = [...userFromDataBase?.favourites];
+    watchList = [...userObject?.watchlist];
+    favourites = [...userObject?.favourites];
   } catch (error) {
     return NextResponse.json({ message: "invalid user" }, { status: 201 });
   }
-  // try {
-  //   const getReviewsAndRatings = await RatingAndReviews.find({});
-  //   console.log(getReviewsAndRatings, "getReviewsAndRatings");
-  // } catch (error) {
-  //   return NextResponse.json({ message: "invalid user" }, { status: 201 });
-  // }
+  try {
+    userReviews = await RatingAndReviews.find({});
+  } catch (error) {
+    return NextResponse.json({ message: "invalid user" }, { status: 201 });
+  }
   const fetch = searchParams.get("fetch");
   const page = searchParams.get("page") || "1";
   const getGenre = searchParams.get("getGenre");
@@ -52,14 +55,14 @@ export async function GET(request: Request) {
   const id = searchParams.get("id");
   if (watchListParam) {
     try {
-      return NextResponse.json({ watchList }, { status: 201 });
+      return NextResponse.json({ watchList, userObject }, { status: 201 });
     } catch (error) {
       return NextResponse.json({ error }, { status: 201 });
     }
   }
   if (favouritesParam) {
     try {
-      return NextResponse.json({ favourites }, { status: 201 });
+      return NextResponse.json({ favourites, userObject }, { status: 201 });
     } catch (error) {
       return NextResponse.json({ error }, { status: 201 });
     }
@@ -78,7 +81,7 @@ export async function GET(request: Request) {
           page
         );
         return NextResponse.json(
-          { ...response?.data, watchList, favourites },
+          { ...response?.data, watchList, favourites, userObject },
           { status: 201 }
         );
       } catch (e) {
@@ -92,7 +95,7 @@ export async function GET(request: Request) {
         try {
           const response = await getTrending(fetch, page);
           return NextResponse.json(
-            { ...response?.data, watchList, favourites },
+            { ...response?.data, watchList, favourites, userObject },
             { status: 201 }
           );
         } catch (e) {
@@ -103,7 +106,7 @@ export async function GET(request: Request) {
         try {
           const response = await getTopRated(fetch, page);
           return NextResponse.json(
-            { ...response?.data, watchList, favourites },
+            { ...response?.data, watchList, favourites, userObject },
             { status: 201 }
           );
         } catch (e) {
@@ -114,7 +117,7 @@ export async function GET(request: Request) {
         try {
           const response = await getUpcomingMovies(page);
           return NextResponse.json(
-            { ...response?.data, watchList, favourites },
+            { ...response?.data, watchList, favourites, userObject },
             { status: 201 }
           );
         } catch (e) {
@@ -129,7 +132,7 @@ export async function GET(request: Request) {
             searchParams.get("query") || ""
           );
           return NextResponse.json(
-            { ...response?.data, watchList, favourites },
+            { ...response?.data, watchList, favourites, userObject },
             { status: 201 }
           );
         } catch (e) {
@@ -144,7 +147,7 @@ export async function GET(request: Request) {
             page
           );
           return NextResponse.json(
-            { ...response?.data, watchList, favourites },
+            { ...response?.data, watchList, favourites, userObject },
             { status: 201 }
           );
         } catch (e) {
@@ -157,7 +160,7 @@ export async function GET(request: Request) {
             searchParams.get("keywordId") || ""
           );
           return NextResponse.json(
-            { ...response?.data, watchList, favourites },
+            { ...response?.data, watchList, favourites, userObject },
             { status: 201 }
           );
         } catch (e) {
@@ -168,7 +171,7 @@ export async function GET(request: Request) {
       try {
         const response = await getGenres(fetch, page);
         return NextResponse.json(
-          { ...response?.data, watchList, favourites },
+          { ...response?.data, watchList, favourites, userObject },
           { status: 201 }
         );
       } catch (e) {
@@ -180,7 +183,7 @@ export async function GET(request: Request) {
         const videoResponse = await getVideos(fetch, id);
         const similarMovies = await getSimilarMovies(fetch, id);
         const recommendedMovies = await getRecommendedMovies(fetch, id);
-        const reviews = (await getMovieReviews(fetch, id)) || [];
+        reviews = (await getMovieReviews(fetch, id)) || [];
         return NextResponse.json(
           {
             ...response?.data,
@@ -190,6 +193,7 @@ export async function GET(request: Request) {
             reviews: [...reviews?.data?.results],
             watchList,
             favourites,
+            userReviews,
           },
           { status: 201 }
         );
@@ -203,18 +207,33 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { item, watchlist, favourite, add, review, user, rating } =
-      await request.json();
+    const {
+      item,
+      watchlist,
+      favourite,
+      add,
+      review,
+      user,
+      rating,
+      movieId,
+      fetch,
+    } = await request.json();
     const session = await getServerSession(authOptions);
     await connectMongoDB();
-    // if (review) {
-    //   const addReview = await RatingAndReviews.insertMany({
-    //     user,
-    //     rating,
-    //     review,
-    //   });
-    //   return NextResponse.json(addReview, { status: 201 });
-    // }
+
+    if (review && user) {
+      const newReview = new RatingAndReviews({
+        user,
+        rating,
+        review,
+        userName: user.userName,
+        movieId,
+        fetch,
+      });
+      const userReviews = await newReview.save();
+
+      return NextResponse.json(userReviews, { status: 201 });
+    }
     const updatedDocument = await Users.findOneAndUpdate(
       {
         userName: session?.user?.name,
@@ -242,6 +261,7 @@ export async function POST(request: Request) {
         new: true,
       }
     );
+
     if (!updatedDocument) {
       throw new Error("Cannot find user.");
     }

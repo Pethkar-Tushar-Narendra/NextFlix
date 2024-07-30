@@ -7,10 +7,12 @@ export const addWatchListHandler = async (
   add: boolean,
   review: string,
   user: string,
-  rating: number
+  rating: number,
+  movieId: string,
+  fetch: string
 ) => {
   try {
-    const response = await axios.post("http://localhost:3000/api/list", {
+    const response = await axios.post("/api/list", {
       watchlist: watchList,
       item: { ...item },
       favourite: favourite,
@@ -18,6 +20,8 @@ export const addWatchListHandler = async (
       review,
       user,
       rating,
+      movieId,
+      fetch,
     });
   } catch (error) {
     console.log(error, "error");

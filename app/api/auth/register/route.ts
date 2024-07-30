@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import connectMongoDB from "@/libs/mongodb";
-import { hashPassword } from "@/Components/Functions";
-import Users from "@/models/users";
+import connectMongoDB from "../../../../libs/mongodb";
+import { hashPassword } from "../../../../Components/Functions";
+import Users from "../../../../models/users";
 
 // Get list will provide list of movies by checking request data
 export async function POST(request: Request) {
@@ -9,14 +9,14 @@ export async function POST(request: Request) {
     const { userName, password, email } = await request.json();
     await connectMongoDB();
     const encryptedPassword = await hashPassword(password);
-
-    await Users.insertMany({
+    const user = new Users({
       userName,
       password: encryptedPassword,
       email,
       watchlist: [],
       favourites: [],
     });
+    await user.save();
 
     console.log(
       { userName, password: encryptedPassword, email },

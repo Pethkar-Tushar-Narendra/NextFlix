@@ -1,8 +1,8 @@
 "use client";
-import ModalPopup from "@/Components/ModalPopup";
-import NavBar from "@/Components/NavBar";
-import ProductCard from "@/Components/ProductCard";
-import SearchBar from "@/Components/SearchBar";
+import ModalPopup from "../../Components/ModalPopup";
+import NavBar from "../../Components/NavBar";
+import ProductCard from "../../Components/ProductCard";
+import SearchBar from "../../Components/SearchBar";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -50,7 +50,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/list", {
+        const response = await axios.get("/api/list", {
           params: {
             fetch: fetch,
             ...categorySelected,
@@ -60,6 +60,7 @@ const Home: React.FC = () => {
         });
         setMaxPageNo(response?.data?.total_pages);
         setData(response.data || []);
+        localStorage.setItem("user", JSON.stringify(response.data.userObject));
       } catch (error) {
         console.log(error, "error");
       }
@@ -70,7 +71,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchGenre = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/list", {
+        const response = await axios.get("/api/list", {
           params: { fetch: fetch, getGenre: true, page: 1 },
         });
         setGenres(response?.data?.genres || []);

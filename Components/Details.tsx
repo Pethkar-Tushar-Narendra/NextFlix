@@ -3,11 +3,11 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import AddReview from "./AddReview";
 import NavBar from "./NavBar";
-import ShowDetails from "./ShowDetails";
 import ProductCard from "./ProductCard";
 import ReviewCard from "./ReviewCard";
-import AddReview from "./AddReview";
+import ShowDetails from "./ShowDetails";
 
 type data = {
   videos: [];
@@ -21,7 +21,6 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
     favourites: [{ id: 0 }],
     watchList: [{ id: 0 }],
   });
-
   const [reRender, setReRender] = useState<boolean>(true);
 
   useEffect(() => {
@@ -169,28 +168,29 @@ const Details = ({ id, fetch }: { id: string; fetch: string }) => {
         )}
       </div>
       <AddReview id={id} fetch={fetch} />
-      {movieReviews && movieReviews?.length > 0 && (
-        <div className="p-4 flex flex-col border-t-2 border-red-900">
-          <p className="w-full text-3xl">
-            {movieReviews?.length + 1} Member Reviews for{" "}
-            {data?.title || data?.original_name}
-          </p>
-          {movieReviews?.map((review, i) => (
-            <ReviewCard
-              author={review.author}
-              content={review.content}
-              rating={review.author_details.rating}
-            />
-          ))}
-          {userReviews?.map((review, i) => (
-            <ReviewCard
-              author={review.userName}
-              content={review.review}
-              rating={review.rating}
-            />
-          ))}
-        </div>
-      )}
+      {(movieReviews || userReviews) &&
+        movieReviews?.length + userReviews?.length > 0 && (
+          <div className="p-4 flex flex-col border-t-2 border-red-900">
+            <p className="w-full text-3xl">
+              {movieReviews?.length + userReviews?.length} Member Reviews for{" "}
+              {data?.title || data?.original_name}
+            </p>
+            {movieReviews?.map((review, i) => (
+              <ReviewCard
+                author={review.author}
+                content={review.content}
+                rating={review.author_details.rating}
+              />
+            ))}
+            {userReviews?.map((review, i) => (
+              <ReviewCard
+                author={review.userName}
+                content={review.review}
+                rating={review.rating}
+              />
+            ))}
+          </div>
+        )}
     </div>
   );
 };

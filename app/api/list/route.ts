@@ -28,8 +28,9 @@ export async function GET(request: Request) {
   let reviews;
   let userReviews = [];
   let userObject;
+  let session;
   try {
-    const session = await getServerSession(authOptions);
+    session = await getServerSession(authOptions);
 
     await connectMongoDB();
 
@@ -41,11 +42,7 @@ export async function GET(request: Request) {
   } catch (error) {
     return NextResponse.json({ message: "invalid user" }, { status: 201 });
   }
-  try {
-    userReviews = await RatingAndReviews.find({});
-  } catch (error) {
-    return NextResponse.json({ message: "invalid user" }, { status: 201 });
-  }
+
   const fetch = searchParams.get("fetch");
   const page = searchParams.get("page") || "1";
   const getGenre = searchParams.get("getGenre");
@@ -53,6 +50,11 @@ export async function GET(request: Request) {
   const watchListParam = searchParams.get("watchList");
   const favouritesParam = searchParams.get("favourites");
   const id = searchParams.get("id");
+  try {
+    userReviews = await RatingAndReviews.find({ fetch: fetch, movieId: id });
+  } catch (error) {
+    return NextResponse.json({ message: "invalid user" }, { status: 201 });
+  }
   if (watchListParam) {
     try {
       return NextResponse.json({ watchList, userObject }, { status: 201 });
